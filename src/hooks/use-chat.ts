@@ -6,7 +6,7 @@ export type Response = {
     answer: string;
     sources: string[];
     document_types: string[];
-    suggestion: string[];
+    suggestions: string[];
   };
 };
 
@@ -53,7 +53,7 @@ export function useChat(options: UseChatOptions) {
     setIsLoading(true);
 
     try {
-      const response: Response = await axios.post(
+      const response = await axios.post(
         apiUrl,
         {
           question: content,
@@ -64,12 +64,13 @@ export function useChat(options: UseChatOptions) {
           headers: {},
         }
       );
+      
       const assistantMessage: Message = {
         role: "assistant",
         content: response.data.answer,
-        sources: response.data.sources,
-        fileType: response.data.document_types,
-        suggestion: response.data.suggestion,
+        sources: response.data.sources || [],
+        fileType: response.data.document_types || [],
+        suggestion: response.data.suggestions || [],
         error: false,
       };
       setMessages((prev) => [...prev, assistantMessage]);
