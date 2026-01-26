@@ -13,13 +13,14 @@ import { Badge } from "@/components/ui/badge";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import ChatDialog from "./_components/chat-dialog";
 import ChatArea from "./_components/chat-area";
-import { topics } from "./_config";
+import { useTopics } from "./_config";
 
 export default function PopupChat() {
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
   const [open, setOpen] = React.useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
   const matches = useMediaQuery("(min-width: 768px)");
+  const { topics, isLoading: topicsLoading } = useTopics();
   const { isLoading, content, messages, chatBoxRef, setContent, onSubmit } =
     useChat({
       apiUrl: import.meta.env.VITE_API_URL,
@@ -142,21 +143,27 @@ export default function PopupChat() {
           )}
           <div className="flex-1 px-3">
             {!messages.length && (
-              <div className="w-max space-x-2.5 px-1 py-1 pb-4">
-                {topics.map((topic, index) => (
-                  <Badge
-                    key={index}
-                    variant="secondary"
-                    aria-disabled={isLoading}
-                    className="hover:ring-ring cursor-pointer leading-5 font-normal hover:ring-1 aria-disabled:pointer-events-none aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
-                    onClick={() => {
-                      if (isLoading) return;
-                      onSubmit(topic);
-                    }}
-                  >
-                    {topic}
+              <div className="flex flex-wrap gap-2.5 px-1 py-1 pb-4">
+                {topicsLoading ? (
+                  <Badge variant="secondary" className="leading-5 font-normal">
+                    Loading topics...
                   </Badge>
-                ))}
+                ) : (
+                  topics.map((topic, index) => (
+                    <Badge
+                      key={index}
+                      variant="secondary"
+                      aria-disabled={isLoading}
+                      className="hover:ring-ring cursor-pointer leading-5 font-normal hover:ring-1 aria-disabled:pointer-events-none aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+                      onClick={() => {
+                        if (isLoading) return;
+                        onSubmit(topic);
+                      }}
+                    >
+                      {topic}
+                    </Badge>
+                  ))
+                )}
               </div>
             )}
           </div>

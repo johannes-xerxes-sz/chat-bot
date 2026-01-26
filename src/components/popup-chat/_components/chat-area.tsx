@@ -1,5 +1,6 @@
 import React from "react";
 import SuggestionBadge from "./suggestion-badge";
+import SourceCard from "./source-card";
 import { cn } from "@/lib/utils";
 import { Message } from "@/hooks/use-chat";
 
@@ -49,6 +50,16 @@ export default function ChatArea({
                       .replace(/\n/g, "<br />"),
                   }}
                 />
+                {msg.role === "assistant" && msg.sources.length > 0 && (
+                  <div className="space-y-1">
+                    <p className="text-muted-foreground text-xs">Sources</p>
+                    <div className="grid w-full grid-cols-2 gap-2">
+                      {msg.sources.map((source, i) => (
+                        <SourceCard key={i} source={source} />
+                      ))}
+                    </div>
+                  </div>
+                )}
                 {msg.role === "assistant" && msg.suggestion?.length > 0 && (
                   <div className="space-y-1">
                     <p className="text-muted-foreground text-xs">Suggestions</p>
@@ -65,13 +76,6 @@ export default function ChatArea({
                   </div>
                 )}
               </div>
-              {/* {msg.sources.length > 0 && (
-                          <div className="grid w-full grid-cols-2 gap-2">
-                            {msg.sources.map((source, i) => (
-                              <SourceCard key={i} source={source} />
-                            ))}
-                          </div>
-                        )} */}
             </div>
           </div>
         ))}

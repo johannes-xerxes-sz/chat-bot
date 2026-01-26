@@ -1,18 +1,16 @@
-import { ExternalLink } from "lucide-react";
-import { Link } from "react-router";
+import { FileText } from "lucide-react";
 
 interface SourceCardProps {
   source: string;
 }
 
 export default function SourceCard({ source }: SourceCardProps) {
+  const displaySource = source.replace(/^docs\//, "");
+  
   return (
-    <Link
-      to={source}
-      className="bg-secondary text-secondary-foreground flex w-full cursor-pointer items-center gap-1.5 rounded-xl border px-2 py-1"
-    >
-      <p className="w-full truncate text-xs text-nowrap">{source}</p>
-      <ExternalLink className="size-3.5" />
-    </Link>
+    <div className="bg-secondary text-secondary-foreground flex w-full items-center gap-1.5 rounded-xl border px-2 py-1">
+      <FileText className="size-3.5 shrink-0" />
+      <p className="w-full truncate text-xs text-nowrap">{displaySource}</p>
+    </div>
   );
 }

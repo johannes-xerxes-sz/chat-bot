@@ -4,7 +4,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ChevronLeft, Lightbulb, SquarePen } from "lucide-react";
 import ChatArea from "./chat-area";
 import { Message } from "@/hooks/use-chat";
-import { topics } from "../_config";
+import { useTopics } from "../_config";
 
 interface ChatDialogProps
   extends Omit<React.ComponentProps<typeof Dialog>, "onOpenChange"> {
@@ -31,6 +31,8 @@ export default function ChatDialog({
   messagesEndRef,
   ...props
 }: ChatDialogProps) {
+  const { topics, isLoading: topicsLoading } = useTopics();
+
   return (
     <Dialog onOpenChange={onOpenChange} {...props}>
       <DialogContent className="h-[calc(100%_-_2rem)] w-[85%] bg-[#F0F1F4] p-3 sm:max-w-full [&_[data-slot=dialog-close]]:hidden">
@@ -107,15 +109,27 @@ export default function ChatDialog({
                     </p>
                   </div>
                   <div className="flex items-center gap-3 px-1 py-1">
-                    {topics.map((topic, index) => (
-                      <div
-                        key={index}
-                        className="flex h-[76px] w-32 flex-col justify-between rounded-lg border p-2 text-start"
-                      >
+                    {topicsLoading ? (
+                      <div className="flex h-[76px] w-32 flex-col justify-between rounded-lg border p-2 text-start">
                         <Lightbulb className="text-primary size-4" />
-                        <p className="text-xs font-medium">{topic}</p>
+                        <p className="text-xs font-medium">Loading...</p>
                       </div>
-                    ))}
+                    ) : (
+                      topics.slice(0, 3).map((topic, index) => (
+                        <div
+                          key={index}
+                          className="hover:bg-accent flex h-[76px] w-32 cursor-pointer flex-col justify-between rounded-lg border p-2 text-start transition-colors"
+                          onClick={() => {
+                            if (!isLoading) {
+                              onSubmit(topic);
+                            }
+                          }}
+                        >
+                          <Lightbulb className="text-primary size-4" />
+                          <p className="text-xs font-medium">{topic}</p>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
               )}
