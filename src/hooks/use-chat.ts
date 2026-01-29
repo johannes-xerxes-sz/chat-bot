@@ -1,10 +1,18 @@
 import React from "react";
 import axios from "axios";
 
+export type Source = {
+  name?: string;
+  url?: string | null;
+  source?: string;
+  content?: string;
+  metadata?: Record<string, any>;
+};
+
 export type Response = {
   data: {
     answer: string;
-    sources: string[];
+    sources: Source[];
     document_types: string[];
     suggestions: string[];
   };
@@ -17,7 +25,7 @@ export type Role = "Administrator" | "Manager" | "Analytics";
 export type Message = {
   role: ChatRole;
   content: string;
-  sources: string[];
+  sources: Source[];
   fileType: string[];
   suggestion: string[];
   error: boolean;
@@ -188,6 +196,7 @@ export function useChat(options: UseChatOptions) {
       console.log("Response Data:", response.data);
       console.log("Answer:", response.data.answer);
       console.log("Sources:", response.data.sources);
+      console.log("Sources (stringified):", JSON.stringify(response.data.sources, null, 2));
       console.log("Document Types:", response.data.document_types);
       console.log("Suggestions:", response.data.suggestions);
       
@@ -235,20 +244,20 @@ export function useChat(options: UseChatOptions) {
   }
 
   const clearMessages = () => {
-    console.log("=== CLEARING CONVERSATION MEMORY ===");
+    console.log("=== RESTARTING CHATBOT - CLEARING SESSION ===");
     console.log("Messages before clear:", messages.length);
     console.log("Old Session ID:", sessionId);
     
-    // Generate new session on manual clear
+    // Generate new session ID when restarting chatbot
     const newId = generateSessionId();
     setSessionId(newId);
     sessionStorage.setItem("chatbot_session_id", newId);
     updateLastActivity();
     
     setMessages([]);
-    console.log("Conversation memory cleared");
-    console.log("New Session ID:", newId);
-    console.log("NOTE: Old session on server: " + sessionId);
+    console.log("✅ Chatbot restarted successfully");
+    console.log("✅ New Session ID created:", newId);
+    console.log("✅ Previous session cleared from frontend");
   };
 
   return {

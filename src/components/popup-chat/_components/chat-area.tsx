@@ -18,26 +18,26 @@ export default function ChatArea({
   onSubmit,
 }: ChatAreaProps) {
   return (
-    <div className="mb-2 h-full w-full overflow-y-auto px-4 py-3">
-      <div className="mx-auto mt-3">
+    <div className="h-full w-full overflow-y-auto px-4 py-3">
+      <div className="mx-auto max-w-4xl space-y-4 py-4">
         {messages.map((msg, i) => (
           <div
             key={i}
             className={cn(
-              "flex",
+              "flex animate-in fade-in slide-in-from-bottom-2 duration-500",
               msg.role === "user" ? "justify-end" : "justify-start"
             )}
           >
             <div
               className={cn(
-                "flex max-w-[320px] flex-col gap-3",
+                "flex max-w-[85%] flex-col gap-3 md:max-w-[75%]",
                 msg.role === "assistant" ? "items-start" : "items-end"
               )}
             >
-              <div className="flex flex-col space-y-1">
+              <div className="flex w-full flex-col space-y-2">
                 <p
                   className={cn(
-                    "w-fit rounded-lg px-3 py-2 text-[12px] font-medium tracking-normal",
+                    "w-fit rounded-lg px-4 py-2.5 text-sm font-medium leading-relaxed tracking-normal shadow-sm",
                     msg.role === "assistant"
                       ? "bg-secondary text-foreground"
                       : "bg-accent text-accent-foreground",
@@ -51,8 +51,8 @@ export default function ChatArea({
                   }}
                 />
                 {msg.role === "assistant" && msg.sources.length > 0 && (
-                  <div className="space-y-1">
-                    <p className="text-muted-foreground text-xs">Sources</p>
+                  <div className="space-y-2">
+                    <p className="text-muted-foreground text-xs font-medium">Sources</p>
                     <div className="grid w-full grid-cols-2 gap-2">
                       {msg.sources.map((source, i) => (
                         <SourceCard key={i} source={source} />
@@ -61,8 +61,8 @@ export default function ChatArea({
                   </div>
                 )}
                 {msg.role === "assistant" && msg.suggestion?.length > 0 && (
-                  <div className="space-y-1">
-                    <p className="text-muted-foreground text-xs">Suggestions</p>
+                  <div className="space-y-2">
+                    <p className="text-muted-foreground text-xs font-medium">Suggestions</p>
                     <div className="flex flex-wrap gap-2">
                       {msg.suggestion.map((suggestion, index) => (
                         <SuggestionBadge
@@ -80,10 +80,14 @@ export default function ChatArea({
           </div>
         ))}
         {isLoading && (
-          <div className="[&_div]:bg-primary flex items-center [&_div]:mx-0.5 [&_div]:size-1.5 [&_div]:rounded-full">
-            <div className="animate-bounce delay-0" />
-            <div className="animate-bounce delay-150" />
-            <div className="animate-bounce delay-300" />
+          <div className="flex animate-in fade-in slide-in-from-bottom-2 duration-500">
+            <div className="bg-secondary rounded-lg px-4 py-3 shadow-sm">
+              <div className="[&_div]:bg-primary flex items-center gap-1">
+                <div className="size-2 animate-bounce rounded-full [animation-delay:0ms]" />
+                <div className="size-2 animate-bounce rounded-full [animation-delay:150ms]" />
+                <div className="size-2 animate-bounce rounded-full [animation-delay:300ms]" />
+              </div>
+            </div>
           </div>
         )}
         <div ref={messagesEndRef} />

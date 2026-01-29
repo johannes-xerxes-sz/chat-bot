@@ -21,7 +21,7 @@ export default function PopupChat() {
   const [openDialog, setOpenDialog] = React.useState(false);
   const matches = useMediaQuery("(min-width: 768px)");
   const { topics, isLoading: topicsLoading } = useTopics();
-  const { isLoading, content, messages, chatBoxRef, setContent, onSubmit } =
+  const { isLoading, content, messages, chatBoxRef, setContent, onSubmit, clearMessages } =
     useChat({
       apiUrl: import.meta.env.VITE_API_URL,
       errorMessage: "Sorry, something went wrong.",
@@ -50,6 +50,7 @@ export default function PopupChat() {
         chatBoxRef={chatBoxRef}
         messages={messages}
         messagesEndRef={messagesEndRef}
+        clearMessages={clearMessages}
       />
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
@@ -86,7 +87,7 @@ export default function PopupChat() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="hover:bg-accent/40"
+                    className="hover:bg-accent/40 hidden"
                   >
                     <ChevronDown className="size-5 text-white" />
                   </Button>
@@ -95,12 +96,13 @@ export default function PopupChat() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="hover:text-foreground w-full hover:bg-[#E3E3E3]"
+                    className="hover:text-foreground w-full justify-start gap-2 hover:bg-[#E3E3E3] hidden"
                     onClick={() => {
                       setOpenDialog(true);
+                      setOpen(false);
                     }}
                   >
-                    <ExternalLink />
+                    <ExternalLink className="size-4" />
                     Open in full
                   </Button>
                 </PopoverContent>
